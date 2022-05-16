@@ -50,3 +50,23 @@ class Gatekeeper(object):
             return None
 
         return config.set_browser_override_variant(request, variant)
+
+def initialize_gatekeeper(user_id=None, app=None, config_map=None):
+    from flask import current_app
+    from flask import request
+    from flask import session
+    from flask_login import current_user
+
+    if not app:
+        app = current_app
+
+    if user_id is None and current_user and not current_user.is_anonymous:
+        user_id = current_user.id
+
+    gk = Gatekeeper(
+        user_id=user_id,
+        app=app,
+        request=request,
+        session=session,
+        config_map=config_map)
+    return gk
