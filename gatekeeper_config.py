@@ -21,32 +21,27 @@ class FeatureFlagConfig(ABC):
     @abstractmethod
     def _get_variant(
             self,
-            user_id = None,
             app = None,
             request = None,
             session = None):
         pass
 
-    def get_variant(self, user_id = None, app = None,
+    def get_variant(self, app = None,
                     request = None, session = None):
         override_variant = self.get_override_variant(
-            user_id=user_id, app=app, request=request, session=session)
+           app=app, request=request, session=session)
         if override_variant:
             return override_variant
         else:
             return self._get_variant(
-                user_id=user_id, app=app, request=request, session=session)
+                app=app, request=request, session=session)
 
     def get_override_variant(
-            self, user_id=None, app=None, request=None, session=None):
+            self, app=None, request=None, session=None):
         if request:
             browser_override_variant = self.get_browser_override_variant(request)
             if browser_override_variant:
                 return browser_override_variant
-        if self.overrides:
-            for variant, user_ids in self.overrides.items():
-                if user_id in user_ids:
-                    return self.variants_enum[variant]
         return None
 
     def set_browser_override_variant(self, request, variant):
@@ -75,14 +70,12 @@ class FeatureFlagConfig(ABC):
 
 class RotaTesteFFConfig(FeatureFlagConfig):
     FLAG_NAME = 'ROTA_TESTE'
-    VARIANTS_ENUM_STR = 'VISIBLE NOT_VISIBLE'
+    VARIANTS_ENUM_STR = 'NOT_VISIBLE VISIBLE'
     DESCRIPTION = 'Gate visibility of my new feature during development'
 
-    def _get_variant(self, user_id=None, app=None, request=None, session=None):
-        if app and app.config.get('IS_DEV'):
+    def _get_variant(self, app=None, request=None, session=None):
+        if app and (app.config.get('FLASK_ENV') == 'development'):
             return self.variants_enum.VISIBLE
-        #elif user_id and user_id in [1, 2, 3]:  # Team user ids
-        #    return self.variants_enum.VISIBLE
         else:
             return self.variants_enum.NOT_VISIBLE
 
