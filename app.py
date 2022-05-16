@@ -1,7 +1,6 @@
 from flask import Flask, request
 
 app = Flask(__name__)
-app.config['FLASK_ENV'] = "development"
 
 @app.before_request
 def register_gatekeeper():
@@ -15,7 +14,7 @@ def register_gatekeeper():
 
 @app.route("/teste")
 def index():
-    if request.gk.ff('ROTA_TESTE', 'VISIBLE'): 
+    if request.gk.ff('ROTA_TESTE', 'NOT_VISIBLE'): 
         return 'Visibilidade habilitada'
     else:
         return 'Visibilidade desabilitada'
