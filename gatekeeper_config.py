@@ -74,7 +74,6 @@ class RotaTesteFFConfig(FeatureFlagConfig):
     DESCRIPTION = 'Gate visibility of my new feature during development'
 
     def _get_variant(self, app=None, request=None, session=None):
-        print(app.config.get('FLASK_ENV'))
         if app and (app.config.get('FLASK_ENV') == 'development'):
             return self.variants_enum.VISIBLE
         else:

@@ -15,10 +15,10 @@ def register_gatekeeper():
 
 @app.route("/teste")
 def index():
-    if request.gk.ff('ROTA_TESTE', 'NOT_VISIBLE'): 
-        return 'Olá Mundo!'
+    if request.gk.ff('ROTA_TESTE', 'VISIBLE'): 
+        return 'Visibilidade habilitada'
     else:
-        return 'teste'
+        return 'Visibilidade desabilitada'
 
 if __name__ == "__main__":
 	app.run()
