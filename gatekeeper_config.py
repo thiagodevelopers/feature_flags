@@ -70,10 +70,11 @@ class FeatureFlagConfig(ABC):
 
 class RotaTesteFFConfig(FeatureFlagConfig):
     FLAG_NAME = 'ROTA_TESTE'
-    VARIANTS_ENUM_STR = 'NOT_VISIBLE VISIBLE'
+    VARIANTS_ENUM_STR = 'VISIBLE NOT_VISIBLE'
     DESCRIPTION = 'Gate visibility of my new feature during development'
 
     def _get_variant(self, app=None, request=None, session=None):
+        print(app.config.get('FLASK_ENV'))
         if app and (app.config.get('FLASK_ENV') == 'development'):
             return self.variants_enum.VISIBLE
         else:

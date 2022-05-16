@@ -15,7 +15,7 @@ def register_gatekeeper():
 
 @app.route("/teste")
 def index():
-    if request.gk.ff('ROTA_TESTE', 'VISIBLE'): 
+    if request.gk.ff('ROTA_TESTE', 'NOT_VISIBLE'): 
         return 'Olá Mundo!'
     else:
         return 'teste'
