@@ -72,3 +72,21 @@ class FeatureFlagConfig(ABC):
             return self.variants_enum[browser_override_variant]
         else:
             return None
+
+class MyNewFeatureFFConfig(FeatureFlagConfig):
+    FLAG_NAME = 'ROTA_TESTE'
+    VARIANTS_ENUM_STR = 'NOT_VISIBLE'
+    DESCRIPTION = 'Gate visibility of my new feature during development'
+
+    def _get_variant(self, user_id=None, app=None, request=None, session=None):
+        if app and app.config.get('IS_DEV'):
+            return self.variants_enum.VISIBLE
+        elif user_id and user_id in [1, 2, 3]:  # Team user ids
+            return self.variants_enum.VISIBLE
+        else:
+            return self.variants_enum.NOT_VISIBLE
+
+
+FF_CONFIG_MAP: FFConfigMap = {
+    'ROTA_TESTE': MyNewFeatureFFConfig()
+}            
