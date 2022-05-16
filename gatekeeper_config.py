@@ -21,14 +21,14 @@ class FeatureFlagConfig(ABC):
     @abstractmethod
     def _get_variant(
             self,
-            user_id: Optional[int] = None,
-            app: Optional[Flask] = None,
-            request: Optional[Request] = None,
-            session: Optional[Any] = None):
+            user_id = None,
+            app = None,
+            request = None,
+            session = None):
         pass
 
-    def get_variant(self, user_id: Optional[int] = None, app: Optional[Flask] = None,
-                    request: Optional[Request] = None, session: Optional[Any] = None):
+    def get_variant(self, user_id = None, app = None,
+                    request = None, session = None):
         override_variant = self.get_override_variant(
             user_id=user_id, app=app, request=request, session=session)
         if override_variant:
@@ -73,20 +73,20 @@ class FeatureFlagConfig(ABC):
         else:
             return None
 
-class MyNewFeatureFFConfig(FeatureFlagConfig):
+class RotaTesteFFConfig(FeatureFlagConfig):
     FLAG_NAME = 'ROTA_TESTE'
-    VARIANTS_ENUM_STR = 'NOT_VISIBLE'
+    VARIANTS_ENUM_STR = 'VISIBLE NOT_VISIBLE'
     DESCRIPTION = 'Gate visibility of my new feature during development'
 
     def _get_variant(self, user_id=None, app=None, request=None, session=None):
         if app and app.config.get('IS_DEV'):
             return self.variants_enum.VISIBLE
-        elif user_id and user_id in [1, 2, 3]:  # Team user ids
-            return self.variants_enum.VISIBLE
+        #elif user_id and user_id in [1, 2, 3]:  # Team user ids
+        #    return self.variants_enum.VISIBLE
         else:
             return self.variants_enum.NOT_VISIBLE
 
 
-FF_CONFIG_MAP: FFConfigMap = {
-    'ROTA_TESTE': MyNewFeatureFFConfig()
+FF_CONFIG_MAP = {
+    'ROTA_TESTE': RotaTesteFFConfig()
 }            
